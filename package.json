@@ -9,6 +9,7 @@
   },
   "files": [
     "dist",
+    "ssl-cert-workflow",
     "README.md",
     ".env.example"
   ],
