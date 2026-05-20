@@ -97,7 +97,7 @@ Claude Code 通过 `settings.json` 管理 MCP server 和环境变量，比 `.env
 }
 ```
 
-并在同级目录的 `mcp.json` 中注册 server：
+并在同级目录的 `.mcp.json` 中注册 server：
 
 ```json
 {
