@@ -93,6 +93,35 @@ install_skill() {
   success "Skill installed to ${SKILL_DIR}"
 }
 
+init_settings() {
+  local settings_dir="${HOME}/.claude"
+  local settings_file="${settings_dir}/settings.json"
+
+  if [ -f "$settings_file" ]; then
+    warn "~/.claude/settings.json already exists. Skipping initialization."
+    return
+  fi
+
+  info "Initializing Claude Code settings..."
+  mkdir -p "$settings_dir"
+
+  cat > "$settings_file" << 'EOF'
+{
+  "enabledMcpjsonServers": ["ssl-cert-manager"],
+  "env": {
+    "ALI_ACCESS_KEY_ID": "your-access-key-id",
+    "ALI_ACCESS_KEY_SECRET": "your-access-key-secret",
+    "ALI_REGION_ID": "cn-hangzhou",
+    "SSH_PRIVATE_KEY_PATH": "",
+    "SSH_USER": "root",
+    "SSH_PORT": "22"
+  }
+}
+EOF
+
+  success "Claude Code settings initialized at ${settings_file}"
+}
+
 init_env() {
   local env_file="${SCRIPT_DIR}/.env"
 
@@ -101,7 +130,7 @@ init_env() {
     return
   fi
 
-  info "Initializing .env configuration..."
+  info "Initializing .env (fallback) configuration..."
 
   cat > "$env_file" << 'EOF'
 # Aliyun DNS API
@@ -127,7 +156,7 @@ SSH_PORT=22
 ACME_DIRECTORY_URL=https://acme-v02.api.letsencrypt.org/directory
 EOF
 
-  success ".env created at ${env_file}"
+  success ".env created at ${env_file} (for non-Claude usage)"
 }
 
 print_next_steps() {
@@ -138,18 +167,11 @@ print_next_steps() {
   echo ""
   echo "Next steps:"
   echo ""
-  echo "  1. Edit your .env file:"
-  if [ -f "${SCRIPT_DIR}/.env" ]; then
-    echo -e "     ${BLUE}vi ${SCRIPT_DIR}/.env${NC}"
-  else
-    echo -e "     ${BLUE}vi /path/to/ssl-cert-manager-mcp/.env${NC}"
-  fi
-  echo ""
-  echo "  2. Configure Claude Code to use the MCP server:"
-  echo -e "     ${BLUE}vi .claude/settings.local.json${NC} (project-level)"
+  echo "  1. Configure Claude Code with your credentials:"
   echo -e "     ${BLUE}vi ~/.claude/settings.json${NC} (global)"
+  echo -e "     ${BLUE}vi .claude/settings.local.json${NC} (project-level, recommended)"
   echo ""
-  echo "     Example configuration:"
+  echo "     Example:"
   echo '     {'
   echo '       "enabledMcpjsonServers": ["ssl-cert-manager"],'
   echo '       "env": {'
@@ -157,6 +179,11 @@ print_next_steps() {
   echo '         "ALI_ACCESS_KEY_SECRET": "your-secret"'
   echo '       }'
   echo '     }'
+  echo ""
+  echo "  2. Or use .env (for standalone / non-Claude usage):"
+  if [ -f "${SCRIPT_DIR}/.env" ]; then
+    echo -e "     ${BLUE}vi ${SCRIPT_DIR}/.env${NC}"
+  fi
   echo ""
   echo "  3. Start Claude Code and say:"
   echo -e "     ${YELLOW}\"/ssl-cert-workflow\"${NC}"
@@ -173,8 +200,9 @@ main() {
   install_mcp_server
   install_skill
 
-  # Only init .env if running from local source
+  # Only init if running from local source
   if [ -f "${SCRIPT_DIR}/package.json" ]; then
+    init_settings
     init_env
   fi
 

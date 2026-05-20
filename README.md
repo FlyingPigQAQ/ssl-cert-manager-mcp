@@ -78,58 +78,9 @@ cp ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
 ./install.sh
 ```
 
-### 2. 配置环境变量
+### 2. 配置 Claude Code（推荐）
 
-复制示例配置并填写你的凭证：
-
-```bash
-cp .env.example .env
-```
-
-编辑 `.env`：
-
-```ini
-# 阿里云 DNS API（必须）
-# https://ram.console.aliyun.com/manage/ak
-ALI_ACCESS_KEY_ID=your-access-key-id
-ALI_ACCESS_KEY_SECRET=your-access-key-secret
-ALI_REGION_ID=cn-hangzhou
-
-# SSH 默认配置（可选，可被单条调用覆盖）
-SSH_PRIVATE_KEY_PATH=/Users/yourname/.ssh/id_rsa
-SSH_USER=root
-SSH_PORT=22
-
-# SMTP 邮件通知（可选）
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-SMTP_FROM=your-email@gmail.com
-
-# ACME 目录（可选）
-ACME_DIRECTORY_URL=https://acme-v02.api.letsencrypt.org/directory
-# 测试环境：
-# ACME_DIRECTORY_URL=https://acme-staging-v02.api.letsencrypt.org/directory
-```
-
-> **安全提示**：`.env` 文件已加入 `.gitignore`，切勿提交到版本控制。
-
-### 3. 安装 Skill
-
-```bash
-mkdir -p ~/.claude/skills/ssl-cert-workflow
-cp /path/to/ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
-```
-
-或一键脚本：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/main/install-skill.sh | bash
-```
-
-### 4. 在 Claude Code 中启用 MCP Server
+Claude Code 通过 `settings.json` 管理 MCP server 和环境变量，比 `.env` 更安全、更灵活（按项目隔离、不污染 shell）。
 
 #### 方式 A：项目级配置（推荐）
 
@@ -182,6 +133,51 @@ curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/m
 ```
 
 重启 Claude Code 后生效。
+
+### 3. 安装 Skill
+
+```bash
+mkdir -p ~/.claude/skills/ssl-cert-workflow
+cp /path/to/ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
+```
+
+或一键脚本：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/main/install-skill.sh | bash
+```
+
+### 备选：使用 .env 文件
+
+如果你用 Cursor、Windsurf 或其他非 Claude Code 客户端，可以改用 `.env`：
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env`：
+
+```ini
+# 阿里云 DNS API（必须）
+ALI_ACCESS_KEY_ID=your-access-key-id
+ALI_ACCESS_KEY_SECRET=your-access-key-secret
+ALI_REGION_ID=cn-hangzhou
+
+# SSH 默认配置（可选）
+SSH_PRIVATE_KEY_PATH=/Users/yourname/.ssh/id_rsa
+SSH_USER=root
+SSH_PORT=22
+
+# SMTP 邮件通知（可选）
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM=your-email@gmail.com
+```
+
+> **安全提示**：`.env` 文件已加入 `.gitignore`，切勿提交到版本控制。
 
 ---
 
