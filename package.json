@@ -4,6 +4,14 @@
   "description": "MCP server for SSL certificate automation: ACME apply, Aliyun DNS verify, SSH deploy, remote exec, email notify",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "ssl-cert-manager-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    ".env.example"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

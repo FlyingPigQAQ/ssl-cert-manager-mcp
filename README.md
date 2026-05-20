@@ -45,11 +45,23 @@
 - 阿里云 DNS 解析的域名（支持通配符 `*.example.com`）
 - 目标服务器的 SSH 访问权限
 
-### 1. 安装 MCP Server
+### 方式一：一键安装（推荐）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/main/install.sh | bash
+```
+
+脚本会自动：
+- 检查 Node.js 环境
+- 安装 MCP Server（本地 / npm / GitHub 自动探测）
+- 安装 Claude Code Skill
+- 初始化 `.env` 配置文件
+
+### 方式二：手动安装
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yourname/ssl-cert-manager-mcp.git
+git clone https://github.com/FlyingPigQAQ/ssl-cert-manager-mcp.git
 cd ssl-cert-manager-mcp
 
 # 安装依赖
@@ -57,6 +69,13 @@ npm install
 
 # 构建
 npm run build
+
+# 安装 Skill
+mkdir -p ~/.claude/skills/ssl-cert-workflow
+cp ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
+
+# 运行安装脚本
+./install.sh
 ```
 
 ### 2. 配置环境变量
@@ -107,7 +126,7 @@ cp /path/to/ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
 或一键脚本：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourname/ssl-cert-manager-mcp/main/install-skill.sh | bash
+curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/main/install-skill.sh | bash
 ```
 
 ### 4. 在 Claude Code 中启用 MCP Server
