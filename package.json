@@ -1,0 +1,29 @@
+{
+  "name": "ssl-cert-manager-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for SSL certificate automation: ACME apply, Aliyun DNS verify, SSH deploy, remote exec, email notify",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "inspector": "npx @modelcontextprotocol/inspector node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "acme-client": "^5.4.0",
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "node-scp": "^0.0.23",
+    "nodemailer": "^6.9.0",
+    "ssh2": "^1.16.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/nodemailer": "^6.4.0",
+    "@types/ssh2": "^1.15.0",
+    "typescript": "^5.6.0"
+  }
+}
