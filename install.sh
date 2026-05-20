@@ -94,20 +94,20 @@ install_skill() {
 }
 
 init_settings() {
-  local settings_dir="${HOME}/.claude"
-  local settings_file="${settings_dir}/settings.json"
+  local project_dir="${SCRIPT_DIR}"
+  local claude_dir="${project_dir}/.claude"
+  local settings_file="${claude_dir}/settings.local.json"
 
   if [ -f "$settings_file" ]; then
-    warn "~/.claude/settings.json already exists. Skipping initialization."
+    warn ".claude/settings.local.json already exists. Skipping initialization."
     return
   fi
 
-  info "Initializing Claude Code settings..."
-  mkdir -p "$settings_dir"
+  info "Initializing Claude Code project settings..."
+  mkdir -p "$claude_dir"
 
   cat > "$settings_file" << 'EOF'
 {
-  "enabledMcpjsonServers": ["ssl-cert-manager"],
   "env": {
     "ALI_ACCESS_KEY_ID": "your-access-key-id",
     "ALI_ACCESS_KEY_SECRET": "your-access-key-secret",
@@ -167,25 +167,36 @@ print_next_steps() {
   echo ""
   echo "Next steps:"
   echo ""
-  echo "  1. Configure Claude Code with your credentials:"
-  echo -e "     ${BLUE}vi ~/.claude/settings.json${NC} (global)"
-  echo -e "     ${BLUE}vi .claude/settings.local.json${NC} (project-level, recommended)"
+  echo "  1. Register the MCP server in your project root:"
+  echo -e "     ${BLUE}vi .mcp.json${NC}"
   echo ""
-  echo "     Example:"
   echo '     {'
-  echo '       "enabledMcpjsonServers": ["ssl-cert-manager"],'
+  echo '       "mcpServers": {'
+  echo '         "ssl-cert-manager": {'
+  echo '           "command": "node",'
+  echo '           "args": ["ssl-cert-manager-mcp"]'
+  echo '         }'
+  echo '       }'
+  echo '     }'
+  echo ""
+  echo "     (If you cloned locally instead of npm install, use the absolute path to dist/index.js)"
+  echo ""
+  echo "  2. Configure credentials in your project:"
+  echo -e "     ${BLUE}vi .claude/settings.local.json${NC}"
+  echo ""
+  echo '     {'
   echo '       "env": {'
   echo '         "ALI_ACCESS_KEY_ID": "your-key",'
   echo '         "ALI_ACCESS_KEY_SECRET": "your-secret"'
   echo '       }'
   echo '     }'
   echo ""
-  echo "  2. Or use .env (for standalone / non-Claude usage):"
+  echo "  3. Or use .env (for standalone / non-Claude usage):"
   if [ -f "${SCRIPT_DIR}/.env" ]; then
     echo -e "     ${BLUE}vi ${SCRIPT_DIR}/.env${NC}"
   fi
   echo ""
-  echo "  3. Start Claude Code and say:"
+  echo "  4. Restart Claude Code, then say:"
   echo -e "     ${YELLOW}\"/ssl-cert-workflow\"${NC}"
   echo -e "     or"
   echo -e "     ${YELLOW}\"帮我申请 example.com 的证书\"${NC}"

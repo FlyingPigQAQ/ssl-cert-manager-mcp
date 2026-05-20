@@ -55,7 +55,7 @@ curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/m
 - 检查 Node.js 环境
 - 安装 MCP Server（本地 / npm / GitHub 自动探测）
 - 安装 Claude Code Skill 到 `~/.claude/skills/ssl-cert-workflow/`
-- 初始化 `~/.claude/settings.json` 配置
+- 初始化 `.claude/settings.local.json` 项目级配置
 
 ### 方式二：手动安装
 
@@ -73,13 +73,37 @@ mkdir -p ~/.claude/skills/ssl-cert-workflow
 cp ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
 ```
 
-然后手动配置 Claude Code（见下方步骤 2）。
+然后按下方"配置 Claude Code"部分手动完成配置。
 
-### 2. 配置 Claude Code（推荐）
+## 配置 Claude Code
 
-Claude Code 通过 `settings.json` 管理 MCP server 和环境变量，比 `.env` 更安全、更灵活（按项目隔离、不污染 shell）。
+Claude Code 使用两个配置文件，分工如下：
 
-#### 方式 A：项目级配置（推荐）
+| 文件 | 作用 | 位置 |
+|---|---|---|
+| `.mcp.json` | 注册 MCP Server（告诉 Claude 如何启动它） | 项目根目录 |
+| `.claude/settings.local.json` | 设置环境变量和权限（密钥、路径等） | 项目根目录 `.claude/` |
+
+### 项目级配置（推荐）
+
+**Step 1 — 注册 MCP Server**
+
+在项目根目录创建 `.mcp.json`：
+
+```json
+{
+  "mcpServers": {
+    "ssl-cert-manager": {
+      "command": "node",
+      "args": ["ssl-cert-manager-mcp"]
+    }
+  }
+}
+```
+
+> 如果你是通过 `git clone` 本地开发而非 `npm install -g`，请将 `args` 改为绝对路径，如 `"/Users/yourname/workspace/ssl-cert-manager-mcp/dist/index.js"`。
+
+**Step 2 — 配置环境变量**
 
 在项目根目录创建 `.claude/settings.local.json`：
 
@@ -92,34 +116,22 @@ Claude Code 通过 `settings.json` 管理 MCP server 和环境变量，比 `.env
     "SSH_PRIVATE_KEY_PATH": "/Users/yourname/.ssh/id_rsa",
     "SSH_USER": "root",
     "SSH_PORT": "22"
-  },
-  "enabledMcpjsonServers": ["ssl-cert-manager"]
-}
-```
-
-并在同级目录的 `.mcp.json` 中注册 server：
-
-```json
-{
-  "mcpServers": {
-    "ssl-cert-manager": {
-      "command": "node",
-      "args": ["/absolute/path/to/ssl-cert-manager-mcp/dist/index.js"]
-    }
   }
 }
 ```
 
-#### 方式 B：Claude Desktop 全局配置
+重启 Claude Code（或重新打开项目会话）后生效。
 
-编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`（macOS）或对应平台的配置路径：
+### Claude Desktop 全局配置（可选）
+
+如果你希望全局可用，编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`（macOS）或对应平台的配置路径：
 
 ```json
 {
   "mcpServers": {
     "ssl-cert-manager": {
       "command": "node",
-      "args": ["/absolute/path/to/ssl-cert-manager-mcp/dist/index.js"],
+      "args": ["ssl-cert-manager-mcp"],
       "env": {
         "ALI_ACCESS_KEY_ID": "your-access-key-id",
         "ALI_ACCESS_KEY_SECRET": "your-access-key-secret"
@@ -129,9 +141,9 @@ Claude Code 通过 `settings.json` 管理 MCP server 和环境变量，比 `.env
 }
 ```
 
-重启 Claude Code 后生效。
+重启 Claude Desktop 后生效。
 
-### 3. 验证 Skill 已安装
+## 验证 Skill 已安装
 
 一键安装脚本已自动将 Skill 安装到 `~/.claude/skills/ssl-cert-workflow/`。
 
@@ -142,7 +154,7 @@ mkdir -p ~/.claude/skills/ssl-cert-workflow
 cp /path/to/ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
 ```
 
-### 备选：使用 .env 文件
+## 备选：使用 .env 文件
 
 如果你用 Cursor、Windsurf 或其他非 Claude Code 客户端，可以改用 `.env`：
 
