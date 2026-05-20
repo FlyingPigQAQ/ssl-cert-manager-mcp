@@ -64,19 +64,16 @@ curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/m
 git clone https://github.com/FlyingPigQAQ/ssl-cert-manager-mcp.git
 cd ssl-cert-manager-mcp
 
-# 安装依赖
+# 安装依赖并构建
 npm install
-
-# 构建
 npm run build
 
 # 安装 Skill
 mkdir -p ~/.claude/skills/ssl-cert-workflow
 cp ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
-
-# 运行安装脚本
-./install.sh
 ```
+
+然后手动配置 Claude Code（见下方步骤 2）。
 
 ### 2. 配置 Claude Code（推荐）
 
