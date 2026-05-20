@@ -54,8 +54,8 @@ curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/m
 脚本会自动：
 - 检查 Node.js 环境
 - 安装 MCP Server（本地 / npm / GitHub 自动探测）
-- 安装 Claude Code Skill
-- 初始化 `.env` 配置文件
+- 安装 Claude Code Skill 到 `~/.claude/skills/ssl-cert-workflow/`
+- 初始化 `~/.claude/settings.json` 配置
 
 ### 方式二：手动安装
 
@@ -134,17 +134,15 @@ Claude Code 通过 `settings.json` 管理 MCP server 和环境变量，比 `.env
 
 重启 Claude Code 后生效。
 
-### 3. 安装 Skill
+### 3. 验证 Skill 已安装
+
+一键安装脚本已自动将 Skill 安装到 `~/.claude/skills/ssl-cert-workflow/`。
+
+如手动安装，执行：
 
 ```bash
 mkdir -p ~/.claude/skills/ssl-cert-workflow
 cp /path/to/ssl-cert-workflow/SKILL.md ~/.claude/skills/ssl-cert-workflow/
-```
-
-或一键脚本：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/FlyingPigQAQ/ssl-cert-manager-mcp/main/install-skill.sh | bash
 ```
 
 ### 备选：使用 .env 文件
