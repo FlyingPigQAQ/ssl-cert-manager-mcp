@@ -22,7 +22,7 @@ Ask the user for:
 - **Target server(s)**: Hostname or IP, SSH port, remote user, deployment directory
 - **Post-deploy commands** (optional): Shell commands to run after deployment (e.g., `nginx -s reload`)
 - **Notification email(s)** (optional): Where to send the result. Skip if SMTP is not configured.
-- **Staging or production**: Recommend staging first for new setups
+- **Staging or production**: **Always ask the user explicitly.** Explain the difference (staging = test certificates not trusted by browsers, production = real certificates). Do not assume or default to either option. Wait for the user to choose before proceeding.
 
 ## Step 2: Validate Prerequisites
 
@@ -43,7 +43,7 @@ Use the MCP tools in this order:
 Call `apply_certificate` with:
 - `domain`: the domain name
 - `email`: contact email for ACME account
-- `staging`: `true` for first-time testing
+- `staging`: the user's explicit choice from Step 1 (`true` or `false`)
 - `saveToDir` (optional): local directory to save certificate files (e.g., `/tmp/certs` or `./certs`). The tool will write `domain_cert.pem`, `domain_key.pem`, and `domain_chain.pem`.
 
 Capture the returned certificate paths (`certPath`, `keyPath`, `chainPath`), expiration date, and PEM contents. If `saveToDir` is provided, use those local file paths in the next `deploy_certificate` step.
@@ -107,7 +107,7 @@ If any step fails:
 
 ## Safety Guidelines
 
-- Always recommend staging (`staging: true`) for first-time setups
+- Always ask the user to choose staging or production; never default to either
 - Never log or expose `ALI_ACCESS_KEY_SECRET`, `SMTP_PASS`, or SSH private key contents
 - Confirm destructive actions (overwriting existing certificates) with the user
 - Include a `--dry-run` option if the user wants to simulate without applying changes
